@@ -1,16 +1,16 @@
-use clap::Parser; //clap
+use clap::{Parser, Subcommand}; //clap
 use std::path::PathBuf; //for file extension
 //mod ext; bringing ext.rs
 
 #[derive(Parser, Debug)] // derive works with structs, enums, etc.
-#[command(version, long_version = "v0.1.1\nLicense:CC0 1.0 Universal\ncreated by: Austin Vu", about = "idkoc, the best CLI image formatter", long_about = "idkoc (I dont know or care) is a modern CLI image formatter\nwritten in Rust designed to be an all in one image tool")]
+#[command(version, long_version = "v0.2.0\nLicense:CC0 1.0 Universal\ncreated by: Austin Vu", about = "idkoc, the best CLI image formatter", long_about = "idkoc (I dont know or care) is a modern CLI image formatter\nwritten in Rust designed to be an all in one image tool")]
 
 struct CliArgs {
 
     /// webp image format
     #[arg(short, long, value_parser)]
     webp: Option<PathBuf>,
-                           //my optional argument
+                           //my optional arguments
     /// png image format
     #[arg(short, long, value_parser)]
     png: Option<PathBuf>,
@@ -18,6 +18,31 @@ struct CliArgs {
     /// jpg image format
     #[arg(short, long, value_parser)]
     jpg: Option<PathBuf>,
+    
+    #[command(subcommand)]   //sub command
+    command: Option<Commands>,
+
+}
+
+#[derive(Subcommand, Debug)] // for subcommands, seems i have to put this next to my enum, guessing
+                             // by this the derive for the struct is the same
+enum Commands {
+
+  Convert {
+
+   /// webp image format
+    #[arg(short, long, value_parser)]
+    webp: Option<PathBuf>,
+                           //my optional arguments for convert copied from struct
+    /// png image format
+    #[arg(short, long, value_parser)]
+    png: Option<PathBuf>,
+
+    /// jpg image format
+    #[arg(short, long, value_parser)]
+    jpg: Option<PathBuf>,
+    
+  },
 
 
 }
@@ -68,5 +93,26 @@ if let Some(c) = &argument.jpg {
         println!("Could not read the file extension!");
     }
 }
+// sub command convert
+if let Some(Commands::Convert { webp, png, jpg }) = &argument.command { //accessing reference
+                                                                        //command convert
+    let mut counter = 0;
+
+    if webp.is_some() { counter += 1; }
+    if png.is_some() { counter += 1; }
+    if jpg.is_some() { counter += 1; }
+    
+    if counter < 2 {
+      println!("convert subcommand needs exactly 2 images formats.");
+    } else if counter == 2 {
+        println!("Hello world!");
+    } else {
+        println!("convert subcommand needs exactly 2 image formats.");
+    }
+
+
+
+}
+
 
   }
