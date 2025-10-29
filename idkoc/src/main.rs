@@ -1,4 +1,6 @@
-use clap::Parser;
+use clap::Parser; //clap
+use std::path::PathBuf; //for file extension
+//mod ext; bringing ext.rs
 
 #[derive(Parser, Debug)] // derive works with structs, enums, etc.
 #[command(version, long_version = "v0.1.1\nLicense:CC0 1.0 Universal\ncreated by: Austin Vu", about = "idkoc, the best CLI image formatter", long_about = "idkoc (I dont know or care) is a modern CLI image formatter\nwritten in Rust designed to be an all in one image tool")]
@@ -6,16 +8,21 @@ use clap::Parser;
 struct CliArgs {
 
     /// webp image format
-    #[arg(short, long)]
-    webp: String,
-
+    #[arg(short, long, value_parser)]
+    webp: Option<PathBuf>,
+                           //my optional argument
     /// png image format
-    #[arg(short, long)]
-    png: String,
+    #[arg(short, long, value_parser)]
+    png: Option<PathBuf>,
 
 }
 
 fn main() {
-    let _args = CliArgs::parse();
-
-}
+    let argument = CliArgs::parse(); //argument parser
+    
+    if let Some(x) = argument.webp.extension(){
+        println!("Hello world");
+    } else {
+        println!("no file ext");
+    }
+  }
