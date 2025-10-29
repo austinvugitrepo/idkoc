@@ -19,10 +19,21 @@ struct CliArgs {
 
 fn main() {
     let argument = CliArgs::parse(); //argument parser
-    
-    if let Some(x) = argument.webp.extension(){
-        println!("Hello world");
-    } else {
-        println!("no file ext");
+           // Some means like it exists  or whatever
+    if let Some(a) = argument.webp.as_ref().and_then(|p| p.extension()) { //access option and do nested function and unnest it
+      if a.to_str() == Some("webp") { //have to convert the fresh <&OsStr> to &str
+          println!("This is a .webp file.");
+      } else {
+          println!("This is NOT a .webp file.");
+      }
     }
+     if let Some(b) = argument.png.as_ref().and_then(|p| p.extension()) { //access option and do nested function and unnest it
+      if b.to_str() == Some("png") { //have to convert the fresh <&OsStr> to &str
+          println!("This is a .png file.");
+      } else {
+          println!("This is NOT a .png file.");
+      }
+    }
+
+
   }
