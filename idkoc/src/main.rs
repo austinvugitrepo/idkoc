@@ -15,25 +15,58 @@ struct CliArgs {
     #[arg(short, long, value_parser)]
     png: Option<PathBuf>,
 
+    /// jpg image format
+    #[arg(short, long, value_parser)]
+    jpg: Option<PathBuf>,
+
+
 }
 
 fn main() {
-    let argument = CliArgs::parse(); //argument parser
-           // Some means like it exists  or whatever
-    if let Some(a) = argument.webp.as_ref().and_then(|p| p.extension()) { //access option and do nested function and unnest it
-      if a.to_str() == Some("webp") { //have to convert the fresh <&OsStr> to &str
-          println!("This is a .webp file.");
-      } else {
-          println!("This is NOT a .webp file.");
-      }
-    }
-     if let Some(b) = argument.png.as_ref().and_then(|p| p.extension()) { //access option and do nested function and unnest it
-      if b.to_str() == Some("png") { //have to convert the fresh <&OsStr> to &str
-          println!("This is a .png file.");
-      } else {
-          println!("This is NOT a .png file.");
-      }
-    }
 
+let argument = CliArgs::parse(); //argument parser
+                                 //Some means it exists or whatever
+if let Some(a) = &argument.webp { // reference shennigans  to see if it exists
+    if !a.exists() {  // file checker 
+        println!("File does not exist."); 
+    } else if let Some(ext) = a.extension().and_then(|x| x.to_str()) { //file extension checker that converts <&OsStr> to &str to compare  
+        if ext == "webp" {
+            println!("This is a .webp file.");
+        } else {
+            println!("This is NOT a .webp file.");
+        }
+    } else { // else case if cant read file extension
+        println!("Could NOT read the file extension.");
+    }
+}
+// clone of webp function checker 
+if let Some(b) = &argument.png {
+    if !b.exists() {
+        println!("File does not exist.");
+    } else if let Some(ext) = b.extension().and_then(|x| x.to_str()) {
+        if ext == "png" {
+            println!("This is a .png file.");
+        } else {
+            println!("This is NOT a .png file.");
+        }
+    } else {
+        println!("Could not read the file extension!");
+    }
+}
+
+//clone of webp function checker
+if let Some(c) = &argument.jpg {
+    if !c.exists() {
+        println!("File does not exist.");
+    } else if let Some(ext) = c.extension().and_then(|x| x.to_str()) {
+        if ext == "jpg" {
+            println!("This is a .jpg file.");
+        } else {
+            println!("This is NOT a .jpg file.");
+        }
+    } else {
+        println!("Could not read the file extension!");
+    }
+}
 
   }
